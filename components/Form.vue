@@ -1,6 +1,5 @@
 <template>
   <div class="form">
-    <h1>Investment Calculator</h1>
     <form @submit.prevent>
       <div class="fields">
         <div class="field">
@@ -86,11 +85,6 @@ export default {
 .form {
   width: 100%;
   padding: 1rem;
-  h1 {
-      margin: 1rem 0;
-      color: #212121;
-      font-size: 3rem;
-  }
   form {
     display: flex;
     flex-direction: column;
