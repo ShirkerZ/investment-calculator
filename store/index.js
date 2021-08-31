@@ -2,6 +2,7 @@ export const state = () => ({
     years: 0,
     interestsPercentage: 0,
     monthlyInvestment: 0,
+    currency: '€'
 })
 
 export const mutations = {
@@ -15,6 +16,12 @@ export const mutations = {
 
     updateMonthlyInvestment(state, payload) {
         state.monthlyInvestment = payload || 0
+    },
+
+    updateCurrency(state, payload) {
+        console.log("Currency", payload)
+        state.currency = payload
+        console.log("state c", state.currency)
     },
 
 }

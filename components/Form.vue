@@ -2,7 +2,7 @@
   <div class="form">
     <form @submit.prevent>
       <div class="fields">
-        <div class="field">
+        <div class="field years">
           <label for="years">Years</label>
           <input
             v-model="years"
@@ -25,6 +25,14 @@
             required
           />
         </div>
+        <div class="field">
+          <label for="currency">Currency</label>
+          <select name="currency" v-model="currency" @change="updateCurrency">
+            <option>€</option>
+            <option>$</option>
+            <option>£</option>
+          </select>
+        </div>
       </div>
 
       <div class="field">
@@ -44,6 +52,7 @@
           required
         />
       </div>
+
       <button class="submit">Calculate Income</button>
     </form>
   </div>
@@ -56,6 +65,7 @@ export default {
       years: null,
       interestsPercentage: null,
       monthlyInvestment: null,
+      currency: "€",
     };
   },
 
@@ -77,6 +87,10 @@ export default {
         Number(this.monthlyInvestment)
       );
     },
+
+    updateCurrency() {
+      this.$store.commit("updateCurrency", this.currency);
+    },
   },
 };
 </script>
@@ -93,7 +107,11 @@ export default {
       margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
-      gap: 5rem;
+      gap: 2rem;
+
+      .years {
+        width: 50%;
+      }
     }
     .field {
       margin: 0.7rem 0;
@@ -112,13 +130,24 @@ export default {
         }
       }
 
-      input {
-        border: 0.5px solid black;
-        border-radius: 2rem;
+      input,
+      select {
+        border: none;
+        border-bottom: 0.5px solid #212121;
+        background: none;
         padding: 0.7rem 1.2rem;
         font-size: 1.1rem;
         width: 100%;
         outline: none;
+        transition: border 0.3s ease;
+        &:focus {
+          border-bottom: 0.5px solid #52b69a;
+        }
+      }
+
+      select {
+        height: 100%;
+        padding-left: 0;
       }
     }
 

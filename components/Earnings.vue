@@ -5,29 +5,44 @@
       <li class="incomes">
         <div class="income">
           <div class="label">Last month income</div>
-          <div class="value">{{ lastMonthIncome }} €</div>
+          <div class="value">{{ lastMonthIncome }} {{ currency }}</div>
         </div>
         <div class="total-income">
-          <div class="label">Total Income</div>
-          <div class="value">{{ totalIncome }} €</div>
+          <div class="label">True Income</div>
+          <div class="value">{{ totalIncome }} {{ currency }}</div>
         </div>
       </li>
       <li>
         <div class="invested-amount">
           <div class="label">Total invested amount</div>
-          <div class="value">{{ totalInvestedAmount }} €</div>
+          <div class="value">{{ totalInvestedAmount }} {{ currency }}</div>
         </div>
         <div class="balance">
           <div class="label">Balance</div>
-          <div class="value">{{ balance }} €</div>
+          <div class="value">{{ balance }} {{ currency }}</div>
+        </div>
+      </li>
+
+      <p>Based on current balance</p>
+
+      <li class="expectations">
+        <div>
+          <div class="label">Monthly income</div>
+          <div class="value">{{ monthlyIncomeExpected }} {{ currency }}</div>
+        </div>
+        <div>
+          <div class="label">Yearly income</div>
+          <div class="value">{{ yearlyIncomeExpected }} {{ currency }}</div>
         </div>
       </li>
     </ul>
+
     <p>
-      If you start now to invest <span>{{ monthlyInvestment }} €</span> every
-      month with an interest of
-      <span>{{ interestsPercentage * 100 * 12 }} %</span> you will gain
-      <span class="total-income">{{ totalIncome }} €</span>
+      If you start now to invest
+      <span>{{ monthlyInvestment }} {{ currency }}</span> every month with an
+      interest of <span>{{ interestsPercentage * 100 * 12 }} %</span> you will
+      gain
+      <span class="total-income">{{ totalIncome }} {{ currency }}</span>
       in <span>{{ years }}</span> years.
     </p>
   </div>
@@ -42,21 +57,29 @@ export default {
       lastMonthIncome: 0,
       totalIncome: 0,
       balance: 0,
+      monthlyIncomeExpected: 0,
+      yearlyIncomeExpected: 0,
     };
   },
 
   computed: {
-    ...mapState(["years", "interestsPercentage", "monthlyInvestment"]),
+    ...mapState([
+      "years",
+      "interestsPercentage",
+      "monthlyInvestment",
+      "currency",
+    ]),
 
     calculateIncome() {
       let monthIncome = 0;
       let monthBalance = 0;
       let investment = 0;
+      let balance = 0;
       for (let i = 0; i < this.years * 12; i++) {
         investment += this.monthlyInvestment;
-        monthIncome = investment * this.interestsPercentage;
+        monthIncome = balance * this.interestsPercentage;
         monthBalance += monthIncome;
-        this.balance =
+        balance =
           (investment + monthBalance) * this.interestsPercentage +
           investment +
           monthBalance;
@@ -65,9 +88,18 @@ export default {
       this.lastMonthIncome = monthIncome.toFixed(2);
       this.totalIncome = monthBalance.toFixed(2);
 
-      typeof this.balance == "number"
-        ? (this.balance = this.balance.toFixed(2))
-        : (this.balance = 0);
+      // typeof this.balance == "number"
+      //   ? (this.balance = this.balance.toFixed(2))
+      //   : (this.balance = 0);
+      this.balance = balance.toFixed(2);
+
+      this.monthlyIncomeExpected = (
+        this.balance * this.interestsPercentage
+      ).toFixed(2);
+      this.yearlyIncomeExpected = (
+        this.balance *
+        (this.interestsPercentage * 12)
+      ).toFixed(2);
     },
   },
 };
@@ -84,8 +116,15 @@ export default {
   padding: 1rem;
   ul {
     list-style: none;
+
+    p {
+      margin: 2rem 0 0;
+      font-size: 1.5rem;
+      line-height:normal
+    }
+
     li {
-      margin: 1rem 0;
+      margin: 0 0 1rem;
       display: flex;
       justify-content: space-between;
 
